@@ -1,7 +1,5 @@
 # neurolink
 
-English | [简体中文](README.zh-Hans.md)
-
 `neurolink` is a Go Terminal UI for monitoring Apex Legends service health before or during play, with explicit on-demand Apex player stat lookup. It presents a Crypto-style surveillance dashboard focused on Apex service availability and quick pre-game inspection, not fake ICMP pings or background player tracking.
 
 The app monitors service availability such as:
@@ -75,7 +73,6 @@ The same flags work with `go run .` during development:
 
 ```bash
 go run . --demo
-go run . --lang zh-Hans
 ```
 
 ## TUI Controls
@@ -112,14 +109,12 @@ Persist settings:
 ```bash
 neurolink config set api-key "$YOUR_APEX_STATUS_API_KEY"
 neurolink config set language en
-neurolink config set language zh-Hans
 neurolink config set poll-interval 30s
 ```
 
 You can also save multiple settings at once:
 
 ```bash
-neurolink config set --api-key "$YOUR_APEX_STATUS_API_KEY" --lang zh-Hans --poll-interval 30s
 ```
 
 Show saved settings. The API key is always masked:
@@ -152,7 +147,6 @@ defaults < config file < environment < flags
 ## Environment Variables
 
 - `NEUROLINK_APEX_API_KEY`: one-off API key override
-- `NEUROLINK_LANG`: one-off language override, `en` or `zh-Hans`
 - `NEUROLINK_POLL_INTERVAL`: one-off poll interval override, such as `30s` or `1m`
 - `NEUROLINK_CONFIG`: config file path override
 
@@ -160,7 +154,6 @@ Flags still take final precedence:
 
 ```bash
 NEUROLINK_APEX_API_KEY="$YOUR_APEX_STATUS_API_KEY" neurolink --poll-interval 1m
-NEUROLINK_LANG=zh-Hans neurolink --lang en
 ```
 
 ## Behavior Without an API Key
