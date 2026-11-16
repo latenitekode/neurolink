@@ -191,8 +191,12 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.view = viewPlayer
 		m.playerFocused = true
 		return m, nil
-	case "r":
+	case "r", "f5":
 		return m, requestStatusRefresh(m.statusRefresh)
+	case "esc":
+		m.view = viewDashboard
+		m.playerFocused = false
+		return m, nil
 	}
 
 	if m.view == viewPlayer {
