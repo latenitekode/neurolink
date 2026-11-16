@@ -172,8 +172,8 @@ func lexiconFor(language Language) lexicon {
 		helpHelp:      "?: help view",
 		helpSearch:    "enter: search from the player view",
 		helpPlatform:  "p: cycle PC / PS4 / X1 when the player input is not focused",
-		helpRefresh:   "r: request an immediate service refresh",
-		helpQuit:      "q / ctrl+c: quit",
+		helpRefresh:   "r / F5: request an immediate service refresh",
+		helpQuit:      "Esc: dashboard from other views; q / ctrl+c: quit",
 		helpPrivacy:   "Player data is requested only after explicit lookup; neurolink does not continuously track players or hide telemetry.",
 
 		running:  "RUNNING",
