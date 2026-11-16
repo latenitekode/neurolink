@@ -157,3 +157,57 @@ func TestNavigationHelpConfigAndRefreshKey(t *testing.T) {
 	}
 }
 
+type fakePlayerProvider struct {
+	snapshot playerapi.PlayerSnapshot
+	err      error
+	last     playerapi.LookupRequest
+}
+
+func (p *fakePlayerProvider) Lookup(ctx context.Context, request playerapi.LookupRequest) (playerapi.PlayerSnapshot, error) {
+	p.last = request
+	if p.err != nil {
+		return playerapi.PlayerSnapshot{}, p.err
+	}
+	if p.snapshot.PlayerName == "" {
+		return playerapi.PlayerSnapshot{}, errors.New("missing test player snapshot")
+	}
+	return p.snapshot, nil
+}
+
+func keyMsg(value string) tea.KeyMsg {
+	switch value {
+	case "/":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'/'}}
+	case "enter":
+		return tea.KeyMsg{Type: tea.KeyEnter}
+	case "r":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'r'}}
+	case "3":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'3'}}
+	case "?":
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'?'}}
+	default:
+		return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(value)}
+	}
+}
+
+func demoSnapshotForView(now time.Time) statusapi.Snapshot {
+	services := statusapi.CoreServices()
+	for i := range services {
+		services[i].Status = statusapi.StatusHealthy
+		services[i].Summary = "running"
+		services[i].UpdatedAt = now
+		services[i].Regions = []statusapi.RegionStatus{{Name: "Asia", Status: statusapi.StatusHealthy, Label: "RUNNING", Latency: 15 * time.Millisecond, HasLatency: true, CheckedAt: now}}
+	}
+	services[1].Status = statusapi.StatusDegraded
+	services[1].Summary = "one region degraded"
+	return statusapi.Snapshot{
+		Source:        statusapi.SourceDemo,
+		Attribution:   statusapi.Attribution,
+		GeneratedAt:   now,
+		Overall:       statusapi.StatusDegraded,
+		Services:      services,
+		Notice:        "Demo data is not live Apex service status.",
+		RecentReports: []statusapi.RecentReport{{Country: "JP", Issue: "Match making", Platform: "PC"}},
+	}
+}
