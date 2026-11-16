@@ -13,7 +13,7 @@ type Language string
 
 const (
 	LanguageEnglish           Language = "en"
-	LanguageSimplifiedChinese Language = "zh-Hans"
+	
 )
 
 func ParseLanguage(value string) (Language, error) {
@@ -21,10 +21,8 @@ func ParseLanguage(value string) (Language, error) {
 	switch value {
 	case "", string(LanguageEnglish):
 		return LanguageEnglish, nil
-	case string(LanguageSimplifiedChinese):
-		return LanguageSimplifiedChinese, nil
-	default:
-		return "", fmt.Errorf("unsupported language %q (supported: en, zh-Hans)", value)
+		default:
+		return "", fmt.Errorf("unsupported language %q (supported: en)", value)
 	}
 }
 
@@ -108,87 +106,6 @@ type lexicon struct {
 }
 
 func lexiconFor(language Language) lexicon {
-	if language == LanguageSimplifiedChinese {
-		return lexicon{
-			language: LanguageSimplifiedChinese,
-
-			stopped:          "neurolink 已停止\n",
-			loading:          "NEUROLINK // 正在获取服务状态...",
-			headerSubtitle:   "Crypto 监控无人机 / Apex 服务健康",
-			idleMode:         "待机",
-			battleMode:       "战斗",
-			lastUpdatePrefix: "更新于 ",
-
-			statusSummaryTitle: "状态总览",
-			refreshAge:         "刷新距今",
-			historyTrend:       "趋势",
-			refreshQueued:      "已请求刷新，正在等待状态 feed 返回。",
-			impactedServices:   "受影响服务",
-			downDegraded:       "中断 / 降级",
-			unknownChecks:      "未知检查",
-			apiMode:            "API 模式",
-			demoDataNotLive:    "演示数据不是实时 Apex 服务状态。",
-
-			communityPulseTitle: "用户反馈",
-			refreshIssuePrefix:  "刷新问题：",
-			noReportsLine1:      "/servers 可能不包含用户反馈 feed。",
-			noReportsLine2:      "不查询玩家资料或玩家状态。",
-			attributionPrefix:   "来源：",
-			reportReceived:      "已收到反馈",
-
-			noRegionalDetail: "没有区域明细",
-			updatedPrefix:    "更新于 ",
-
-			footerSetup: "tab 切换  1 状态  2 玩家  3 配置  ? 帮助  / 输入玩家  enter 查询  r 刷新  q 退出",
-			footerLive:  "tab 切换  1 状态  2 玩家  3 配置  ? 帮助  / 输入玩家  enter 查询  p 平台  r 刷新  q 退出",
-
-			playerLookupTitle:    "玩家查询",
-			playerLookupSubtitle: "按玩家名和平台显式查询 /bridge；不会后台跟踪玩家。",
-			playerInputLabel:     "玩家名",
-			playerPlaceholder:    "输入 Origin / PSN / Xbox 名称",
-			playerPlatformLabel:  "平台",
-			pcOriginNote:         "PC 查询通常使用 Origin 账号名，即使该账号通过 Steam 游玩。",
-			playerLoading:        "正在查询玩家资料...",
-			playerResultTitle:    "查询结果",
-			playerErrorTitle:     "查询错误",
-			playerIdleLine1:      "输入玩家名并选择平台，然后按 Enter。",
-			playerIdleLine2:      "支持 PC、PS4、X1；查询只会在你按下 Enter 时运行。",
-			playerSource:         "来源",
-			playerUID:            "UID",
-			playerPlatform:       "平台",
-			playerLevel:          "等级",
-			playerRank:           "排位",
-			playerLegend:         "当前传奇",
-			playerTrackers:       "追踪器",
-
-			configTitle:    "配置",
-			configSource:   "当前状态源",
-			configLanguage: "语言",
-			configAPIKey:   "API key：使用 --api-key、NEUROLINK_APEX_API_KEY，或 neurolink config set api-key 保存。",
-			configEnv:      "语言：--lang 或 NEUROLINK_LANG，支持 en 和 zh-Hans。",
-			configDemo:     "无 API key 时使用明确标记的 demo 数据；玩家查询同样返回 demo 结果。",
-
-			helpTitle:     "帮助",
-			helpDashboard: "1 / tab：状态仪表盘",
-			helpPlayer:    "2 / /：玩家查询视图并聚焦输入框",
-			helpConfig:    "3：配置视图",
-			helpHelp:      "?：帮助视图",
-			helpSearch:    "enter：在玩家视图中按当前输入和平台查询",
-			helpPlatform:  "p：玩家输入框未聚焦时切换 PC / PS4 / X1",
-			helpRefresh:   "r：立即请求刷新服务状态",
-			helpQuit:      "q / ctrl+c：退出",
-			helpPrivacy:   "玩家数据只在显式查询时请求；neurolink 不做连续玩家跟踪或隐藏遥测。",
-
-			running:  "正常",
-			degraded: "降级",
-			down:     "中断",
-			unknown:  "未知",
-
-			apiKeyRejected:  "状态 API 拒绝了 API key",
-			refreshCanceled: "刷新已取消",
-		}
-	}
-
 	return lexicon{
 		language: LanguageEnglish,
 
@@ -245,7 +162,7 @@ func lexiconFor(language Language) lexicon {
 		configSource:   "Current status source",
 		configLanguage: "Language",
 		configAPIKey:   "API key: use --api-key, NEUROLINK_APEX_API_KEY, or neurolink config set api-key.",
-		configEnv:      "Language: --lang or NEUROLINK_LANG; supported values are en and zh-Hans.",
+		configEnv:      "Language: --lang or NEUROLINK_LANG; supported value: en.",
 		configDemo:     "Without an API key, clearly labeled demo data is used; player lookup also returns demo results.",
 
 		helpTitle:     "HELP",
@@ -285,24 +202,12 @@ func (c lexicon) statusLabel(status statusapi.Status) string {
 func (c lexicon) viewLabel(view appView) string {
 	switch view {
 	case viewPlayer:
-		if c.language == LanguageSimplifiedChinese {
-			return "玩家"
-		}
 		return "PLAYER"
 	case viewConfig:
-		if c.language == LanguageSimplifiedChinese {
-			return "配置"
-		}
 		return "CONFIG"
 	case viewHelp:
-		if c.language == LanguageSimplifiedChinese {
-			return "帮助"
-		}
 		return "HELP"
 	default:
-		if c.language == LanguageSimplifiedChinese {
-			return "状态"
-		}
 		return "DASHBOARD"
 	}
 }
@@ -360,58 +265,28 @@ func (c lexicon) attributionLine(value string) string {
 	if value == "" {
 		return ""
 	}
-	if c.language == LanguageSimplifiedChinese {
-		value = strings.TrimPrefix(value, "Data from ")
-	}
 	return c.attributionPrefix + value
 }
 
 func (c lexicon) playerError(err error) string {
 	switch {
 	case errors.Is(err, playerapi.ErrAPIKeyRequired):
-		if c.language == LanguageSimplifiedChinese {
-			return "未配置 API key。请使用 --api-key、NEUROLINK_APEX_API_KEY 或 config set api-key。"
-		}
 		return "API key is not configured. Use --api-key, NEUROLINK_APEX_API_KEY, or config set api-key."
 	case errors.Is(err, playerapi.ErrInvalidAPIKey):
-		if c.language == LanguageSimplifiedChinese {
-			return "玩家查询 API 拒绝了 API key。"
-		}
 		return "Player lookup API rejected the API key."
 	case errors.Is(err, playerapi.ErrPlayerNotFound):
-		if c.language == LanguageSimplifiedChinese {
-			return "未找到该玩家。请确认玩家名和平台。"
-		}
 		return "Player was not found. Check the player name and platform."
 	case errors.Is(err, playerapi.ErrUnknownPlatform):
-		if c.language == LanguageSimplifiedChinese {
-			return "未知平台。支持 PC、PS4、X1。"
-		}
 		return "Unknown platform. Supported platforms are PC, PS4, and X1."
 	case errors.Is(err, playerapi.ErrRateLimited):
-		if c.language == LanguageSimplifiedChinese {
-			return "玩家查询达到速率限制，请稍后再试。"
-		}
 		return "Player lookup is rate limited. Try again later."
 	case errors.Is(err, playerapi.ErrPlayerRequired):
-		if c.language == LanguageSimplifiedChinese {
-			return "请输入玩家名后再查询。"
-		}
 		return "Enter a player name before searching."
 	case errors.Is(err, playerapi.ErrInternalAPI):
-		if c.language == LanguageSimplifiedChinese {
-			return "玩家查询 API 当前返回内部错误。"
-		}
 		return "Player lookup API returned an internal error."
 	case errors.Is(err, playerapi.ErrExternalAPI):
-		if c.language == LanguageSimplifiedChinese {
-			return "上游玩家查询暂时不可用。"
-		}
 		return "Upstream player lookup is temporarily unavailable."
 	default:
-		if c.language == LanguageSimplifiedChinese {
-			return "玩家查询失败。"
-		}
 		return "Player lookup failed."
 	}
 }
