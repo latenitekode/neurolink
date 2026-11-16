@@ -22,6 +22,18 @@ jobs:
           go-version-file: go.mod
           cache: true
 
+      - name: Install icon build dependencies
+        run: |
+          python -m pip install Pillow
+          go install github.com/akavel/rsrc@latest
+
+      - name: Generate and embed Windows icon
+        shell: pwsh
+        run: |
+          python assets/make_icon.py
+          & "$(go env GOPATH)\\bin\\rsrc.exe" -ico assets/neurolink.ico -o rsrc.syso
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Run tests
         run: go test ./...
 
