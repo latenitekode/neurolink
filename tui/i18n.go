@@ -240,24 +240,7 @@ func (c lexicon) modeLabel(battle bool) string {
 }
 
 func (c lexicon) notice(value string) string {
-	value = strings.TrimSpace(value)
-	if c.language != LanguageSimplifiedChinese {
-		return value
-	}
-
-	switch value {
-	case "Demo mode: deterministic sample data, not live Apex service status":
-		return "演示模式：确定性的示例数据，不是实时 Apex 服务状态"
-	case "Demo data is not live Apex service status.":
-		return c.demoDataNotLive
-	case "Unable to refresh service data":
-		return "无法刷新服务数据"
-	default:
-		if strings.HasPrefix(value, "Demo player lookup") {
-			return "演示玩家查询结果，不是实时 Apex 玩家数据。"
-		}
-		return value
-	}
+	return strings.TrimSpace(value)
 }
 
 func (c lexicon) attributionLine(value string) string {
