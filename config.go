@@ -71,7 +71,7 @@ func parseAppConfig(args []string, lookupEnv func(string) string) (appConfig, er
 	flags.StringVar(&cfg.APIKey, "api-key", cfg.APIKey, "Apex Legends Status API key")
 	flags.DurationVar(&cfg.PollInterval, "poll-interval", cfg.PollInterval, "service status poll interval")
 	flags.BoolVar(&cfg.Demo, "demo", false, "use deterministic demo data instead of live API data")
-	flags.StringVar(&langValue, "lang", langValue, "UI language: en or zh-Hans")
+	flags.StringVar(&langValue, "lang", langValue, "UI language: en")
 
 	if err := flags.Parse(args); err != nil {
 		return appConfig{}, err
@@ -456,7 +456,7 @@ func newConfigSetFlagSet(configPath string) *flag.FlagSet {
 
 func registerConfigSetFlags(flags *flag.FlagSet, values *configSetFlagValues) {
 	flags.StringVar(&values.APIKey, "api-key", "", "persist Apex Legends Status API key")
-	flags.StringVar(&values.Language, "lang", "", "persist UI language: en or zh-Hans")
+	flags.StringVar(&values.Language, "lang", "", "persist UI language: en")
 	flags.StringVar(&values.PollInterval, "poll-interval", "", "persist service status poll interval")
 }
 
